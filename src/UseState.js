@@ -3,52 +3,79 @@ import React, { useEffect, useState } from 'react'
 const SECURITY_CODE = "paradigma";
 
 function UseState({name}) {
-  const [value, setValue] = useState("")
-  const [error, setError] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const [state, setState] = useState({
+    value: "",
+    error: false,
+    loading: false,
+  })
+  // const [value, setValue] = useState("")
+  // const [error, setError] = useState(false);
+  // const [loading, setLoading] = useState(false);
 
-  console.log(value)
   useEffect(()=>{
-    
-    console.log("first efecto")
-
-    if(!!loading){
+    if(!!state.loading){
       // setError(false);
       setTimeout(()=>{
-        if(value !== SECURITY_CODE){
-          setError(true)
+        if(state.value !== SECURITY_CODE){
+          console.log(state.value, "if")
+          setState({
+            ...state,
+            error: true,
+            loading: false,
+          })
+
+          // setError(true)
         }
         else{
-          setError(false)
+          console.log(state.value, "else")
+          setState({
+            ...state,
+            error: false,
+            loading: false
+          })
+          // setError(false)
         }
-        console.log("valor correcto", value)
-        setLoading(false)
+        // setState({
+        //   ...state,
+        //   loading: false
+        // })
+        // setLoading(false)
       }, 3000)
     }
-  }, [loading]);
+  }, [state.loading]);
 
 
   return (
     <div>
     <h2>Eliminar {name}</h2>
     <p>Por favor, escriba el código de seguridad.</p>
-    {(error && !loading) && (
+    {(state.error && !state.loading) && (
       <p>Código incorrecto. Por favor intente nuevamente.</p>
     )}
-    {loading && (
+    {state.loading && (
       <p>Cargando...</p>
     )}
     <input 
       type='text' 
       placeholder='código de seguridad' 
-      value={value}
+      value={state.value}
       onChange={(event)=> {
         // setError(false)
-        setValue(event.target.value)
+        // setValue(event.target.value)
+        setState({
+          ...state,
+          value: event.target.value
+        })
       }}
     />
     <button
-      onClick={()=> setLoading(true)} //setError(!error)
+      onClick={()=> 
+        setState({
+          ...state,
+          loading: true
+        })
+        // setLoading(true)
+      } //setError(!error)
     >Comprobar</button>
   </div>
   )
